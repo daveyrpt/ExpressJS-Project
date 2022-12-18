@@ -1,10 +1,15 @@
 const express = require('express');
 const cookieParser = require('cookie-parser')
 const session = require('express-session')
+const passport = require('passport')
+
 
 const groceriesRoute = require('./routes/groceries')
 const marketsRoute = require('./routes/markets')
 const authRouter = require('./routes/auth')
+
+require('./database')
+require('./strategies/local')
 
 const app = express();
 const PORT = 3001;
@@ -20,11 +25,8 @@ app.use(session({
     })
 )
 
-/* app.use(function(request, respond, next) {
-    console.log(request.method)
-    next()
-}); */
-
+app.use(passport.initialize());
+app.use(passport.session());
 
 // register router start from /api depends one first parameter
 app.use('/api/groceries', groceriesRoute);
@@ -35,4 +37,5 @@ app.use('/api/auth', authRouter);
 app.listen(PORT, function() {
     console.log(`Listening on port ${PORT}`)
 });
+
 
